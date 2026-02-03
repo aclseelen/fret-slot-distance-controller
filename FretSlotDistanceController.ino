@@ -9,7 +9,7 @@ const int BTN_MIDLONG_TRESHOLD = 1500;  // a button pressed more than 1.5 second
 const int BTN_LONG_TRESHOLD = 4000;     // a button pressed more than 4 seconds can be assigned a different function
 const float FRET_SAW_THICKNESS = 0.5;   // millimeters
 const float NUT_THICKNESS = 3.175;      // millimeters
-const int PRE_LIST_LENGTH = 3;          // Reserved for values before the first fret: [0] zero fret/position, [1] nut headstock size, [2] nut fingerboard side
+const int PRE_LIST_LENGTH = 3;          // Reserved for values before the first fret: [0] zero fret/position, [1] nut headstock side, [2] nut fingerboard side
 const int MAX_DISTANCES = 60;           // Max. length of distance list: number of frets plus length of prelist
 const int HIGH_SPEED = 180;
 const int MEDIUM_SPEED = 120;
@@ -35,11 +35,12 @@ LiquidCrystal lcd(A0, A1, 4, 5, 6, 7);
 
 /** Scale length **/
 
-const int N_SCALE_LENGTH_OPTIONS = 4;
+const int N_SCALE_LENGTH_OPTIONS = 5;
 int currentScaleLengthOption = 0;
 const char* scaleLengthStrings[N_SCALE_LENGTH_OPTIONS] = {
   "25\"",
   "25.5\"",
+  "650 mm",
   "33.25\"",
   "34\"",
 };
@@ -47,20 +48,25 @@ const char* scaleLengthStrings[N_SCALE_LENGTH_OPTIONS] = {
 const float scaleLengthOptionsMm[N_SCALE_LENGTH_OPTIONS] = {
   635.0,   // 25"
   647.7,   // 25.5"
+  650.0,   // 650 mm
   844.55,  // 33.25"
   863.6,   // 34"
 };
 
 /** Fret division **/
 
-const int N_FRET_DIVISION_OPTIONS = 5;
+const int N_FRET_DIVISION_OPTIONS = 8;
 int currentFretDivisionOption = 0;
 const char* fretDivisionStrings[N_FRET_DIVISION_OPTIONS] = {
   "12-TET (21)     ",
   "12-TET (22)     ",
   "Meantone-0 (28) ",
   "Meantone-0 (29) ",
-  "JI makam (42)   ",
+  // "JI makam (42)   ",
+  "19-TET (33)     ",
+  "19-TET (35)     ",
+  "7-TET (12)      ",
+  "7-TET (13)      ",
 };
 
 const int fretDivisionNFrets[N_FRET_DIVISION_OPTIONS] = {
@@ -68,7 +74,11 @@ const int fretDivisionNFrets[N_FRET_DIVISION_OPTIONS] = {
   22,
   28,
   29,
-  42,
+  // 42,
+  33,
+  35,
+  12,
+  13,
 };
 
 /** Variable initialization **/
@@ -147,6 +157,14 @@ void loadDistances() {
     case 2:
     case 3:
       fd.meantone(distances, scaleLengthOptionsMm[currentScaleLengthOption], 2.0, fretDivisionNFrets[currentFretDivisionOption], PRE_LIST_LENGTH);
+      break;
+    case 4:
+    case 5:
+      fd.nTet(distances, scaleLengthOptionsMm[currentScaleLengthOption], 2.0, 19, fretDivisionNFrets[currentFretDivisionOption], PRE_LIST_LENGTH);
+      break;
+    case 6:
+    case 7:
+      fd.nTet(distances, scaleLengthOptionsMm[currentScaleLengthOption], 2.0, 7, fretDivisionNFrets[currentFretDivisionOption], PRE_LIST_LENGTH);
       break;
     default:
       break;
